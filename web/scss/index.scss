@@ -1,0 +1,141 @@
+
+.wrap{
+	position: fixed;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	width:100%;
+	height:100%;
+
+	background:url(../img/background.png) no-repeat center center;
+  	background-size: cover;
+  	max-width:500px;
+	.title{
+		position: absolute;
+		top:0;
+		left:0;
+		width: 100%;
+		height:70px;
+		text-align: center;
+		font-size: 20px;
+		background: url('../img/title.png') no-repeat center center;
+		background-size:auto 40px;
+	}
+	.content{
+		position:absolute;
+		top:70px;
+		left:0;
+		width:100%;
+		bottom: 0;
+		padding: 10px;
+		box-size:border-box;
+		.cell_box{
+			position:absolute;
+			bottom:20px;
+			top:50%;
+			left:50%;
+			height: 420px;
+			transform:translate(-50%,-50%);
+			width:225px;
+			background: url('../img/table.png') no-repeat center center;
+			background-size:cover;
+			padding: 8px;
+			ul{
+				height:12.5%;
+				width:100%;
+				margin: 0;
+				li{
+					width:25%;
+					height:100%;
+					box-sizing:border-box;
+					float:left;
+					list-style:none;
+					color:#fff;
+					text-align:center;
+					position:relative;
+					cursor: pointer;
+					img{
+						position:absolute;
+						top:50%;
+						left:50%;
+						transform:translate(-50%,-50%);
+						width:80%;
+					}
+					&.init{
+						background: url(../img/cell/cell_bg_init.png) no-repeat center center;
+						background-size: 90%;
+					}
+					&.red{
+						background: url(../img/cell/cell_bg_red.png) no-repeat center center;
+						background-size: 90%;
+					}
+					&.blue{
+						background: url(../img/cell/cell_bg_blue.png) no-repeat center center;
+						background-size:90%;
+					}
+					&.meActive:after{
+						content:'';
+						display:block;
+						position:absolute;
+						top:0;
+						left:0;
+						width:100%;
+						height:100%;
+						background:url('../img/cell/cell_active_border.png') no-repeat;
+						background-size: 102px;
+    					background-position: -3px -2px;
+					}
+					&.opActive:after{
+						content:'';
+						display:block;
+						position:absolute;
+						top:0;
+						left:0;
+						width:100%;
+						height:100%;
+						background:url('../img/cell/cell_active_border.png') no-repeat;
+						background-size: 102px;
+    					background-position: -3px -56px;
+					}
+				}
+			}
+		}
+		.meProgress,.opProgress{
+			position:absolute;
+			top:30px;
+			height:170px;
+			width:18px;
+			overflow: hidden;
+			border-radius:6px;
+			img{
+				height:100%;
+				position:absolute;
+				top:0;
+				left:0;
+				width:100%;
+				&.bg{
+					z-index: 99;
+				}
+			}
+
+		}
+		.meProgress{
+			left:30px;
+		}
+		.opProgress{
+			right:30px;
+		}
+	}
+	.content1{
+		position:fixed;
+		top:71px;
+		left:0;
+		width:100%;
+		bottom: 0;
+		padding-top: 0;
+		box-sizing:border-box;
+		border:10px solid #502A7E;
+		border-radius:6px;
+		
+	}
+}

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>老鼠吃大象</title>
+    <meta name="viewport" content="width=device-width initial-scale=1,user-scalable = 0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <!-- 是否启动webapp功能，会删除默认的苹果工具栏和菜单栏。 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 这个主要是根据实际的页面设计的主体色为搭配来进行设置。 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- 忽略页面中的数字识别为电话号码,email识别 -->
+    <meta name="format-detection" content="lectureephone=no"/>
+    <meta name="renderer" content="webkit" />
+    <!-- 避免IE使用兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+    <meta name="HandheldFriendly" content="true">
+    <!-- 微软的老式浏览器 -->
+    <meta name="MobileOptimized" content="320">
+    <!-- uc强制竖屏 -->
+    <meta name="screen-orientation" content="portrait">
+    <!-- QQ强制竖屏 -->
+    <meta name="x5-orientation" content="portrait">
+    <!-- UC强制全屏 -->
+    <meta name="full-screen" content="yes">
+    <!-- QQ强制全屏 -->
+    <meta name="x5-fullscreen" content="true">
+    <!-- UC应用模式 -->
+    <meta name="browsermode" content="application">
+    <!-- QQ应用模式 -->
+    <meta name="x5-page-mode" content="app"> 
+    <!-- windows phone 点击无高光 -->
+    <meta name="msapplication-tap-highlight" content="no">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src='./js/faskclick.js'></script>
+    <script src='./js/vue.js'></script>
+</head>
+<body>
+    <div class="wrap" id='app'>
+        <div class='title'></div>
+        <div class='content'>
+            <div class='cell_box'>
+                <ul class='clearfix' v-for='(row,rowInd) in cell'>
+                    <li
+                        @click="cellClick(rowInd,colInd,row,col)"
+                        v-for='(col,colInd) in row'
+                        :class='{
+                            red:col.role== "op" ,
+                            blue:col.role == "me",
+                            meActive:meActive == rowInd+","+colInd,
+                            init:col.status==0
+                        }'
+
+                    >
+                        <img v-if='col.id' :src="'img/animals/'+col.id+'.png'" alt="">
+                    </li>
+                </ul>
+            </div>
+            <div class='meProgress'>
+                <img class='bg' src="./img/progress_bg.png" alt="">
+                <img src="img/progress_blue.png" alt="">
+            </div>
+            <div class='opProgress'>
+                <img class='bg' src="./img/progress_bg.png" alt="">
+                  <img src="img/progress_red.png" alt="">
+            </div>
+    </div>
+    <script>
+        var socket;
+        var vm = new Vue({
+            el:'.content',
+            data(){
+                return {
+                    meActive:'',
+                    opActive:'',
+                    chess:[
+                        [
+                            7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //对方的
+                        ],
+                        [
+                            7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //自己的
+                        ],
+                    ],
+                    cell:[
+                            [
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],[
+                               {
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               },{
+                                status:0
+                               }
+                            ],
+                    ]
+                }
+            },
+            methods:{
+                random(max,min){
+                    return Math.floor(Math.random()*(max-min+1)+min);
+                },
+                cellClick(rowInd,colInd,row,col){
+                    if(col.status==0){
+                        this.createdCell(col);
+                        return;
+                    }
+                    if(this.meActive){   //已经选过一次
+                        if(col.status==1){  //点击空白 移动位置
+                            var activeInd=this.meActive.split(',');  ////上一个的坐标
+                            var fromX = parseInt(activeInd[1]);
+                            var fromY = parseInt(activeInd[0]);
+                            var toX = colInd;
+                            var toY = rowInd;
+                            if( (Math.abs(fromX-toX) == 1 && fromY == toY ) || ( Math.abs(fromY-toY) ==1 && fromX==toX)){
+                                this.move(fromX,fromY,toX,toY);
+                            }else{
+                                alert('只能移动一个格子哦')
+                            }
+                            return;
+                        }
+                        if(col.role=='me'){ // 重新选择
+                            this.meActive=rowInd+','+colInd;
+                            return;
+                        }
+                        if(col.role=="op"){ //攻击对方
+                            var activeInd=this.meActive.split(',');  //上一个的坐标
+                            var fromX = parseInt(activeInd[1]);
+                            var fromY = parseInt(activeInd[0]);
+                            var toX = colInd;
+                            var toY = rowInd;
+                             var from = this.cell[fromY][fromX];
+                            if(from.id==2){   //足球
+
+                            }
+                            if( (Math.abs(fromX-toX) == 1 && fromY == toY ) || ( Math.abs(fromY-toY) ==1 && fromX==toX)){
+                                this.eat(fromX,fromY,toX,toY)
+                            }else{
+                                alert('太远了')
+                            }
+                            return;
+                        }
+                    }else{
+                        if(col.role=='me'){
+                            this.meActive=rowInd+','+colInd;
+                        }else{
+                            alert('不是你的棋子');
+                        }
+                    }
+                },
+                eat(fromX,fromY,toX,toY){
+                    var from = this.cell[fromY][fromX];
+                    var to = this.cell[toY][toX];
+                    if(from.id==7 && to.id==1){
+                        alert('打不过');
+                        return;
+                    }
+                    if(from.id==1 && to.id==7){
+                        this.move(fromX,fromY,toX,toY);
+                        return
+                    }
+                    if(from.id>=to.id){
+                        this.move(fromX,fromY,toX,toY);
+                    }else{
+                        alert('打不过')
+                    }
+
+                },
+                move(fromX,fromY,toX,toY){    //移动
+                    var from = this.cell[fromY][fromX];
+                    var to = this.cell[toY][toX];
+                    this.$set(to,'id',from.id);
+                    this.$set(to,'role',from.role);
+                    this.$set(to,'status',2);
+                    this.$set(from,'status',1);
+                    delete from.role;
+                    delete from.id;
+                    this.meActive=toY+','+toX;
+                },
+                createdCell(col){       //翻牌
+                    var isMe =this.random(1,0);  //身份
+                    isMe = this.chess[isMe].length ? isMe : (isMe ? 0 : 1);
+                    var activeArr=this.chess[isMe];
+                    var ind = this.random(activeArr.length-1,0); //随机下标
+                    var id=activeArr[ind];
+                    var role=isMe?'me':'op';
+                    this.$set(col,'id',id);
+                    this.$set(col,'role',role);
+                    this.$set(col,'status',2);
+                    activeArr.splice(ind,1)
+                }
+            },
+            mounted(){
+                socket = new WebSocket('ws://192.168.31.243:8383');
+                socket.onmessage = function(res){
+                    console.log(res)
+                    // var data = eval("("+res.data+")");
+                    //     console.log(data)
+                    //     switch(data['type']){
+
+                    //     }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
