@@ -19,6 +19,32 @@
     font-size: 20px;
     background: url("../img/title.png") no-repeat center center;
     background-size: auto 40px; }
+  .wrap .userList {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    padding: 10px;
+    box-size: border-box;
+    color: red;
+    display: none; }
+    .wrap .userList h2 {
+      text-align: center;
+      color: #fff; }
+    .wrap .userList ul li {
+      float: left;
+      width: 30%;
+      height: 50px;
+      margin-right: 5%;
+      border: 1px solid #ccc;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 7px;
+      margin-top: 10px;
+      cursor: pointer; }
+      .wrap .userList ul li:nth-child(3n) {
+        margin-right: 0; }
   .wrap .content {
     position: absolute;
     top: 70px;
@@ -26,7 +52,8 @@
     width: 100%;
     bottom: 0;
     padding: 10px;
-    box-size: border-box; }
+    box-size: border-box;
+    display: none; }
     .wrap .content .cell_box {
       position: absolute;
       bottom: 20px;
