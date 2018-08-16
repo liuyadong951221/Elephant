@@ -37,9 +37,12 @@ class Events
     public static function onConnect($client_id)
     {
         // 向当前client_id发送数据 
-        Gateway::sendToClient($client_id, "Hello $client_id\r\n");
+        // Gateway::sendToClient($client_id, "Hello $client_id\r\n");
+
+
+
         // 向所有人发送
-        Gateway::sendToAll("$client_id login\r\n");
+        // Gateway::sendToAll("$client_id login\r\n");
     }
     
    /**
@@ -54,8 +57,20 @@ class Events
 
       $user = Gateway::getClientIdByUid($req_data['uid']);
 
-        // 向所有人发送 
-        Gateway::sendToAll("$client_id said $message\r\n");
+      switch ($req_data['type']) {
+        case 'init':
+          
+          $this->init($client_id,$message);
+
+          break;
+        
+        default:
+          # code...
+          break;
+      }
+
+      // 向所有人发送 
+      Gateway::sendToAll("$client_id said $message\r\n");
    }
    
    /**
@@ -67,4 +82,25 @@ class Events
        // 向所有人发送 
        GateWay::sendToAll("$client_id logout\r\n");
    }
+
+
+   /**
+    * 初始化面板
+    * @param  [type] $client_id [description]
+    * @param  [type] $message   [description]
+    * @return [type]            [description]
+    */
+   private function init($client_id,$message)
+   {
+      
+        //接收参数，返回所有用户列表
+
+        $all_user_list = Gateway::getAllClientIdList();
+
+
+        //将所有用户的客户端id发送给当前登录用户
+        GateWay::sendToClient($client_id);
+
+   }
+
 }
