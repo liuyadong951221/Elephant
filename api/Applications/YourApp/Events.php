@@ -44,11 +44,7 @@ class Events
       Gateway::sendToClient($client_id, json_encode($message));
 
 
-      $data['list'] = Gateway::getAllClientSessions();
-
-      $data['type'] = 'userlist';
-
-      GateWay::sendToAll(json_encode($data),null,[$client_id]);
+      
 
       // 向所有人发送
       // Gateway::sendToAll("$client_id login\r\n");
@@ -125,6 +121,12 @@ class Events
 
       //将所有用户的客户端id发送给当前登录用户
       GateWay::sendToClient($client_id,json_encode($message));
+
+      $data['list'] = Gateway::getAllClientSessions();
+
+      $data['type'] = 'userlist';
+
+      GateWay::sendToAll(json_encode($message),null,[$client_id]);
 
    }
 
