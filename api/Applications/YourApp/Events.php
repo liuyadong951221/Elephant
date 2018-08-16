@@ -36,13 +36,23 @@ class Events
      */
     public static function onConnect($client_id)
     {
-        // 向当前client_id发送数据 
-        // Gateway::sendToClient($client_id, "Hello $client_id\r\n");
+      // 向当前client_id发送数据 
+      
+      $message['client_id'] = $client_id;
+      $message['type'] = 'init';
+
+      Gateway::sendToClient($client_id, json_encode($message));
 
 
+      $data['list'] = Gateway::getAllClientSessions();
 
-        // 向所有人发送
-        // Gateway::sendToAll("$client_id login\r\n");
+      $data['type'] = 'userlist';
+
+      GateWay::sendToAll(json_encode($data),null,[$client_id]);
+
+      // 向所有人发送
+      // Gateway::sendToAll("$client_id login\r\n");
+      
     }
     
    /**
@@ -53,24 +63,37 @@ class Events
    public static function onMessage($client_id, $message)
    {  
 
+
       $req_data = json_decode($message, true);
 
-      $user = Gateway::getClientIdByUid($req_data['uid']);
 
       switch ($req_data['type']) {
-        case 'init':
+        case 'login':
           
-          $this->init($client_id,$message);
+          self::login($client_id,$req_data);
 
           break;
-        
+        case 'userList':
+          self::getUserlist($client_id,$req_data);
+            break;
+        case 'connect':
+          self::connect($client_id,$req_data);
+        break;
+        case 'race':
+          self::race($client_id,$req_data);
+        break;
+
+        case 'response':
+          self::response($client_id,$req_data);
+          break;
+
         default:
           # code...
           break;
       }
 
       // 向所有人发送 
-      Gateway::sendToAll("$client_id said $message\r\n");
+      // Gateway::sendToAll("$client_id said $message\r\n");
    }
    
    /**
@@ -90,16 +113,93 @@ class Events
     * @param  [type] $message   [description]
     * @return [type]            [description]
     */
-   private function init($client_id,$message)
+   private static function login($client_id,$message)
    {
       
-        //接收参数，返回所有用户列表
+      //登录信息
+      $message['mine']['name'] = $message['data'];
+      $message['mine']['client_id'] = $client_id;
 
-        $all_user_list = Gateway::getAllClientIdList();
+      //将用户名和客户端ID百行存储
+      Gateway::setSession($client_id,['name'=>$message['data']]);
+
+      //将所有用户的客户端id发送给当前登录用户
+      GateWay::sendToClient($client_id,json_encode($message));
+
+   }
 
 
-        //将所有用户的客户端id发送给当前登录用户
-        GateWay::sendToClient($client_id);
+   /**
+    * 获取用户列表
+    * @param  [type] $client_id [description]
+    * @param  [type] $message   [description]
+    * @return [type]            [description]
+    */
+   private static function getUserlist($client_id,$message){
+
+      //接收参数，返回所有用户列表
+
+      $message['list'] = Gateway::getAllClientSessions();
+
+      $message['type'] = 'userlist';
+
+      GateWay::sendToClient($client_id,json_encode($message));
+
+   }
+
+
+   /**
+    * 连接对方
+    * @param  [type] $client_id [description]
+    * @param  [type] $message   [description]
+    * @return [type]            [description]
+    */
+   private static function connect($client_id,$message){
+
+
+        $re_uid = $message['data'];
+
+        $userName = GateWay::getSession($client_id)['name'];
+
+        $message['invite'] = $userName.'对方请求与你一战';
+        $message['response_id'] = $client_id;
+
+        Gateway::sendToClient($re_uid,json_encode($message));
+
+   }
+
+
+   /**
+    * 回应对战
+    * @param  [type] $client_id [description]
+    * @param  [type] $message   [description]
+    * @return [type]            [description]
+    */
+   private static function response($client_id,$message)
+   {
+          
+        $answer = $message['data'];
+
+        $message['client_id'] = $client_id;
+
+        GateWay::sendToClient($answer,json_encode($message));
+
+   }
+
+
+   /**
+    * 比赛开始数据交互
+    * @param  [type] $client_id [description]
+    * @param  [type] $message   [description]
+    * @return [type]            [description]
+    */
+   private static function race($client_id,$message)
+   {
+        
+        $message['type'] = 'race';
+        $message['data'] = $message['data'];
+
+        GateWay::sendToClient($message['to_client_id'],json_encode($message));
 
    }
 
