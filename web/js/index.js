@@ -313,7 +313,7 @@
                     uname=name;
                 }
                 self.myName=uname;
-                socket = new WebSocket('ws://101.201.237.108 :8383');
+                socket = new WebSocket('ws://101.201.237.108:8383');
                 socket.onmessage = function(res){
                      var data = eval("("+res.data+")");
                      console.log('收到消息',data);
