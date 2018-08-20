@@ -1,5 +1,4 @@
         var socket;
-        var look;
         var send=function(type,data,to_client_id){
             var msg = {type:type,data:data};
             if(to_client_id){
@@ -7,20 +6,24 @@
             }
             socket.send(JSON.stringify(msg));
             if(type=='race'){
-                look=true;
+                vm.look=true;
+                vm.opPrev='';
             }
+            console.log('SEND',msg)
         }
         var vm = new Vue({
             el:'.wrap',
             data(){
                 return {
-                    status:'',
-                    client_id:'',
-                    to_client_id:'',
-                    myName:'',
-                    userList:[],
-                    meActive:'',
-                    opActive:'',
+                    look:false, //锁
+                    status:'',  //状态
+                    client_id:'',  //我方id
+                    to_client_id:'', //对方Id
+                    myName:'',   //我的名字
+                    userList:[], //用户列表
+                    meActive:'', //我方当前选中
+                    opActive:'', //对方当前选中
+                    opPrev:'', //对方上一步位置
                     chess:[
                         [
                             7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //对方的
@@ -115,15 +118,38 @@
                 }
             },
             methods:{
+                startGame(){
+                    this.chess=[
+                        [
+                            7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //对方的
+                        ],
+                        [
+                            7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //自己的
+                        ],
+                    ];
+                    this.meActive='';
+                    this.opActive='';
+                    this.opPrev='';
+                    this.cell.map(row=>{
+                        row.map(col=>{
+                            delete col.id;
+                            delete col.role;
+                            col.status=0;
+                        })
+                    })
+                    this.cell=JSON.parse(JSON.stringify(this.cell))
+                    this.status='ongoing';
+                },
                 random(max,min){
                     return Math.floor(Math.random()*(max-min+1)+min);
                 },
                 cellClick(rowInd,colInd,row,col){
-                    if(look){
+                    if(this.look){
                         return;
                     }
                     if(col.status==0){
                         this.createdCell(col,colInd,rowInd);
+                        this.meActive='';
                         return;
                     }
                     if(this.meActive){   //已经选过一次
@@ -228,24 +254,14 @@
                     delete from.role;
                     delete from.id;
                     if(response){
-                        this.opActive=toY+','+toX;
-                    }else{
-                        this.meActive=toY+','+toX;
+                        this.opPrev = fromY+','+fromX;
                     }
-                    if(eat){
-                        var activeArr = to.role=='me' ? this.chess[1] : this.chess[0];
-                        for(var i=0;i<activeArr.length;i++){
-                            if(activeArr[i]==to.id){
-                                activeArr.splice(i,1);
-                                break;
-                            }
-                        }
-                    }
-                    var data = {
-                        type:eat ? 'eat' : 'move',
-                        fromX,fromY,toX,toY
-                    }
+                    this.meActive='';
                     if(!response){
+                        var data = {
+                            type:eat ? 'eat' : 'move',
+                            fromX,fromY,toX,toY
+                        }
                         send('race',data,this.to_client_id)
                     }
                 },
@@ -279,7 +295,7 @@
                     }
                 },
                 response(data){
-                    look=false;
+                    this.look=false;
                     this.meActive='';
                     if(data.type=='created'){
                         var col = this.cell[data.y][data.x];
@@ -329,24 +345,30 @@
                             self.status="checkUser";
                         break;
                         case "connect" :  //收到邀请
+                            if(self.status=='ongoing'){
+                                return;
+                            }
                             var confirm = window.confirm(data.invite);
                             console.log(confirm)
                             if(confirm){
                                 send('response',data.response_id);
                                 self.to_client_id=data.response_id;
-                                self.status="ongoing";
+                                self.startGame();
+                                self.look=false; //被邀请人先走
                             }
                         break;
                         case "response" :   //发起邀请对方确定
                             self.to_client_id=data.client_id;
-                            self.status="ongoing";
+                            self.startGame();
+                            self.look=true; //被邀请人先走
                         break;
                         case "race" :
                             self.response(data.data);
+                        break;
                      }
                 }
                 socket.onopen = function () {
-                  send('login',uname)
+                    send('login',uname);
                 };
                 socket.onerror=function(err){
                     console.log('ERROR',err)

@@ -43,6 +43,10 @@
     <div class="wrap" id='app'>
         <div class='title'></div>
         <div class='content' :style="{display:status=='ongoing'?'block':'none'}">
+            <div class='jiantou' :class='{ me:!look,op:look }'>
+                <img v-if='look' src="img/tishi_op.png" alt="">
+                <img v-else src="img/tishi_me.png" alt="">
+            </div>
             <div class='cell_box'>
                 <ul class='clearfix' v-for='(row,rowInd) in cell'>
                     <li
@@ -53,6 +57,7 @@
                             blue:col.role == "me",
                             meActive:meActive == rowInd+","+colInd,
                             opActive:opActive == rowInd+","+colInd,
+                            opPrev:opPrev == rowInd+","+colInd,
                             init:col.status==0
                         }'
                     >

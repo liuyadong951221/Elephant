@@ -54,13 +54,56 @@
 	}
 	.content{
 		position:absolute;
-		top:70px;
+		top:60px;
 		left:0;
 		width:100%;
 		bottom: 0;
 		padding: 10px;
+		padding-top:0;
 		box-size:border-box;
 		display:none;
+		.jiantou{
+			text-align:center;
+			height:30px;
+			width:100%;
+			img{
+				height:30px;
+			}
+			&.me{
+				animation: loadingMe 1s infinite;
+				background-position:20% center;
+				background-repeat: no-repeat;
+				background-size:auto 30px;
+			}
+			&.op{
+				animation: loadingOp 1s infinite;
+				background-position:80% center;
+				background-repeat: no-repeat;
+				background-size:auto 30px;
+			}
+		}
+		@keyframes loadingOp {
+		    0% {
+		        background-image: url('../img/renjt0.png') ;
+		    }
+		    50%{
+		    	background-image: url('../img/renjt1.png');
+		    }
+		    100% {
+		        background-image: url('../img/renjt0.png');
+		    }
+		}
+		@keyframes loadingMe {
+		    0% {
+		         background-image: url('../img/bluejt0.png');
+		    }
+		    50% {
+		    	 background-image: url('../img/bluejt1.png');
+		    }
+		    100% {
+		     	  background-image:url('../img/bluejt0.png');
+		    }
+		}
 		.cell_box{
 			position:absolute;
 			bottom:20px;
@@ -92,6 +135,7 @@
 						left:50%;
 						transform:translate(-50%,-50%);
 						width:80%;
+						transition: all .5s;
 					}
 					&.init{
 						background: url(../img/cell/cell_bg_init.png) no-repeat center center;
@@ -105,6 +149,15 @@
 						background: url(../img/cell/cell_bg_blue.png) no-repeat center center;
 						background-size:90%;
 					}
+					&.meActive,&.opActive{
+						img{
+    						transform: translate(-50%,-50%) scale(1.3);
+						}
+					}
+					&.opPrev{
+						background: url(../img/cell/cell_active_red.png) no-repeat center center;
+						background-size: 90%;
+					}
 					&.meActive:after{
 						content:'';
 						display:block;
@@ -116,6 +169,7 @@
 						background:url('../img/cell/cell_active_border.png') no-repeat;
 						background-size: 102px;
     					background-position: -3px -2px;
+    					animation: activeScale .5s infinite;
 					}
 					&.opActive:after{
 						content:'';
@@ -128,6 +182,24 @@
 						background:url('../img/cell/cell_active_border.png') no-repeat;
 						background-size: 102px;
     					background-position: -3px -56px;
+    					animation: activeScale .5s infinite;
+					}
+					@keyframes activeScale {
+					    0% {
+					         transform: scale(1.0);
+					    }
+					    25% {
+					    	transform: scale(1.1);
+					    }
+					    50% {
+					         transform: scale(1.2);
+					    }
+					    75% {
+					     	 transform: scale(1.1);
+					    }
+					    100% {
+					    	transform: scale(1.0);
+					    }
 					}
 				}
 			}

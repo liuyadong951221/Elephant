@@ -47,13 +47,64 @@
         margin-right: 0; }
   .wrap .content {
     position: absolute;
-    top: 70px;
+    top: 60px;
     left: 0;
     width: 100%;
     bottom: 0;
     padding: 10px;
+    padding-top: 0;
     box-size: border-box;
     display: none; }
+    .wrap .content .jiantou {
+      text-align: center;
+      height: 30px;
+      width: 100%; }
+      .wrap .content .jiantou img {
+        height: 30px; }
+      .wrap .content .jiantou.me {
+        -webkit-animation: loadingMe 1s infinite;
+                animation: loadingMe 1s infinite;
+        background-position: 20% center;
+        background-repeat: no-repeat;
+        background-size: auto 30px; }
+      .wrap .content .jiantou.op {
+        -webkit-animation: loadingOp 1s infinite;
+                animation: loadingOp 1s infinite;
+        background-position: 80% center;
+        background-repeat: no-repeat;
+        background-size: auto 30px; }
+
+@-webkit-keyframes loadingOp {
+  0% {
+    background-image: url("../img/renjt0.png"); }
+  50% {
+    background-image: url("../img/renjt1.png"); }
+  100% {
+    background-image: url("../img/renjt0.png"); } }
+
+@keyframes loadingOp {
+  0% {
+    background-image: url("../img/renjt0.png"); }
+  50% {
+    background-image: url("../img/renjt1.png"); }
+  100% {
+    background-image: url("../img/renjt0.png"); } }
+
+@-webkit-keyframes loadingMe {
+  0% {
+    background-image: url("../img/bluejt0.png"); }
+  50% {
+    background-image: url("../img/bluejt1.png"); }
+  100% {
+    background-image: url("../img/bluejt0.png"); } }
+
+@keyframes loadingMe {
+  0% {
+    background-image: url("../img/bluejt0.png"); }
+  50% {
+    background-image: url("../img/bluejt1.png"); }
+  100% {
+    background-image: url("../img/bluejt0.png"); } }
     .wrap .content .cell_box {
       position: absolute;
       bottom: 20px;
@@ -87,7 +138,9 @@
             left: 50%;
             -webkit-transform: translate(-50%, -50%);
                     transform: translate(-50%, -50%);
-            width: 80%; }
+            width: 80%;
+            -webkit-transition: all .5s;
+            transition: all .5s; }
           .wrap .content .cell_box ul li.init {
             background: url(../img/cell/cell_bg_init.png) no-repeat center center;
             background-size: 90%; }
@@ -96,6 +149,12 @@
             background-size: 90%; }
           .wrap .content .cell_box ul li.blue {
             background: url(../img/cell/cell_bg_blue.png) no-repeat center center;
+            background-size: 90%; }
+          .wrap .content .cell_box ul li.meActive img, .wrap .content .cell_box ul li.opActive img {
+            -webkit-transform: translate(-50%, -50%) scale(1.3);
+                    transform: translate(-50%, -50%) scale(1.3); }
+          .wrap .content .cell_box ul li.opPrev {
+            background: url(../img/cell/cell_active_red.png) no-repeat center center;
             background-size: 90%; }
           .wrap .content .cell_box ul li.meActive:after {
             content: '';
@@ -107,7 +166,9 @@
             height: 100%;
             background: url("../img/cell/cell_active_border.png") no-repeat;
             background-size: 102px;
-            background-position: -3px -2px; }
+            background-position: -3px -2px;
+            -webkit-animation: activeScale .5s infinite;
+                    animation: activeScale .5s infinite; }
           .wrap .content .cell_box ul li.opActive:after {
             content: '';
             display: block;
@@ -118,7 +179,43 @@
             height: 100%;
             background: url("../img/cell/cell_active_border.png") no-repeat;
             background-size: 102px;
-            background-position: -3px -56px; }
+            background-position: -3px -56px;
+            -webkit-animation: activeScale .5s infinite;
+                    animation: activeScale .5s infinite; }
+
+@-webkit-keyframes activeScale {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1); }
+  25% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1); }
+  50% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2); }
+  75% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1); }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
+
+@keyframes activeScale {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1); }
+  25% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1); }
+  50% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2); }
+  75% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1); }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1); } }
     .wrap .content .meProgress, .wrap .content .opProgress {
       position: absolute;
       top: 30px;
