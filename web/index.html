@@ -67,11 +67,11 @@
             </div>
             <div class='meProgress'>
                 <img class='bg' src="./img/progress_bg.png" alt="">
-                <img src="img/progress_blue.png" alt="">
+                <img :style='{top:meProgress/14*100+"%"}' src="img/progress_blue.png" alt="">
             </div>
             <div class='opProgress'>
                 <img class='bg' src="./img/progress_bg.png" alt="">
-                  <img src="img/progress_red.png" alt="">
+                <img :style='{top:opProgress/14*100+"%"}' src="img/progress_red.png" alt="">
             </div>
         </div>
         <div :style="{display:status=='checkUser'?'block':'none'}" class='userList'>

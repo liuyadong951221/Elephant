@@ -24,6 +24,8 @@
                     meActive:'', //我方当前选中
                     opActive:'', //对方当前选中
                     opPrev:'', //对方上一步位置
+                    opProgress:0,
+                    meProgress:0,
                     chess:[
                         [
                             7,6,6,5,5,4,4,3,3,2,2,1,1,1,1,1    //对方的
@@ -251,18 +253,33 @@
                     this.$set(to,'role',from.role);
                     this.$set(to,'status',2);
                     this.$set(from,'status',1);
-                    delete from.role;
-                    delete from.id;
                     if(response){
                         this.opPrev = fromY+','+fromX;
+                        if(eat){
+                            this.meProgress+=1;
+                        }
                     }
+                    console.log(to)
                     this.meActive='';
                     if(!response){
                         var data = {
                             type:eat ? 'eat' : 'move',
                             fromX,fromY,toX,toY
                         }
-                        send('race',data,this.to_client_id)
+                        send('race',data,this.to_client_id);
+                        if(eat){
+                            this.opProgress+=1;
+                        }
+                    }
+                    delete from.role;
+                    delete from.id;
+                    if(this.meProgress==14){
+                         var confirm = window.confirm('你输了!');
+                         location.reload();
+                    }
+                    if(this.opProgress==14){
+                         var confirm = window.confirm('你赢了!');
+                         location.reload();
                     }
                 },
                 createdCell(col,x,y){       //翻牌
@@ -349,7 +366,6 @@
                                 return;
                             }
                             var confirm = window.confirm(data.invite);
-                            console.log(confirm)
                             if(confirm){
                                 send('response',data.response_id);
                                 self.to_client_id=data.response_id;
