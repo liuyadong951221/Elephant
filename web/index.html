@@ -86,6 +86,14 @@
                 </li>
             </ul>
         </div>
+        <img @click='showExp=true' class='explainBtn' src="img/explain.png" alt="">
+        <div class='explain' :style="{display:showExp?'block':'none'}">
+            <div>
+               <img class='expTit' src="img/explainTitle.png" alt="">
+               <img @click='showExp=false' class='expClose' src="img/close.png" alt="">
+               <img class='explainText' src="./img/explainText.png" alt="">
+            </div>
+        </div>
     </div>
 </body>
     <script src='./js/index.js'></script>

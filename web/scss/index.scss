@@ -20,6 +20,50 @@
 		background: url('../img/title.png') no-repeat center center;
 		background-size:auto 40px;
 	}
+	.explainBtn{
+		position:fixed;
+		right:0;
+		top:20px;
+		width:40px;
+		cursor:pointer;
+	}
+	.explain{
+		position:fixed;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		background:rgba(0,0,0,0.35);
+		display:none;
+		z-index:99999;
+		>div{
+			position:absolute;
+			top:50%;
+			left:50%;
+			transform:translate(-50%,-50%);
+			background: #fff;
+			border-radius:10px;
+			width:300px;
+			padding:10px;
+			padding-top:40px;
+			.expTit{
+				position:absolute;
+				top:-30px;
+				height:60px;
+				left:50%;
+				transform:translateX(-50%);
+			}
+			.expClose{
+				position: absolute;
+				top:10px;
+				right:10px;
+				width:35px;
+			}
+			img.explainText{
+				width:100%;
+			}
+		}
+	}
 	.userList{
 		position:absolute;
 		top:70px;

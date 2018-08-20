@@ -15,6 +15,7 @@
             el:'.wrap',
             data(){
                 return {
+                    showExp:false,
                     look:false, //锁
                     status:'',  //状态
                     client_id:'',  //我方id
@@ -348,8 +349,8 @@
                 self.myName=uname;
                 socket = new WebSocket('ws://101.201.237.108:8383');
                 socket.onmessage = function(res){
+                    console.log('收到消息',res);
                      var data = eval("("+res.data+")");
-                     console.log('收到消息',data);
                      switch(data['type']){
                         case 'init':
                             self.client_id=data.client_id;
@@ -359,6 +360,9 @@
                         break;
                         case "userlist" :
                             self.userList=data.list;
+                            if(self.status=='ongoing'){
+                                return;
+                            }
                             self.status="checkUser";
                         break;
                         case "connect" :  //收到邀请
@@ -380,6 +384,9 @@
                         break;
                         case "race" :
                             self.response(data.data);
+                        break;
+                        case "close" :
+                            console.log('close',data)
                         break;
                      }
                 }
