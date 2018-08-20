@@ -222,7 +222,7 @@
       height: 170px;
       width: 18px;
       overflow: hidden;
-      border-radius: 6px; }
+      border-radius: 9px; }
       .wrap .content .meProgress img, .wrap .content .opProgress img {
         height: 100%;
         position: absolute;
@@ -235,14 +235,3 @@
       left: 30px; }
     .wrap .content .opProgress {
       right: 30px; }
-  .wrap .content1 {
-    position: fixed;
-    top: 71px;
-    left: 0;
-    width: 100%;
-    bottom: 0;
-    padding-top: 0;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    border: 10px solid #502A7E;
-    border-radius: 9px; }

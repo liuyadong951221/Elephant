@@ -210,7 +210,7 @@
 			height:170px;
 			width:18px;
 			overflow: hidden;
-			border-radius:6px;
+			border-radius:9px;
 			img{
 				height:100%;
 				position:absolute;
@@ -229,17 +229,5 @@
 		.opProgress{
 			right:30px;
 		}
-	}
-	.content1{
-		position:fixed;
-		top:71px;
-		left:0;
-		width:100%;
-		bottom: 0;
-		padding-top: 0;
-		box-sizing:border-box;
-		border:10px solid #502A7E;
-		border-radius:9px;
-		
 	}
 }
